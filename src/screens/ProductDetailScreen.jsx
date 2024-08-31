@@ -1,4 +1,5 @@
 import {
+  Alert,
   Animated,
   Dimensions,
   FlatList,
@@ -18,6 +19,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Container from '../container/Container';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductDetailScreen = () => {
   const width = Dimensions.get('window').width;
@@ -37,12 +39,49 @@ const ProductDetailScreen = () => {
     const product = Items.find(item => item.id == productID);
     if (product) {
       setProduct(product);
+      return;
+    }
+  };
+
+  const clearAsyncStorage = async () => {
+    try {
+      await AsyncStorage.clear();
+    } catch (error) {
+      return error;
     }
   };
 
   useEffect(() => {
     getData();
-  }, []);
+    // clearAsyncStorage();
+  }, [navigation]);
+
+  const addToCart = async id => {
+    let itemArray = await AsyncStorage.getItem('cartItems');
+
+    itemArray = JSON.parse(itemArray);
+
+    if (itemArray) {
+      let array = itemArray;
+      array.push(id);
+      try {
+        await AsyncStorage.setItem('cartItems', JSON.stringify(array));
+        navigation.navigate('Home');
+      } catch (error) {
+        return error;
+      }
+    } else {
+      let array = [];
+      array.push(id);
+      try {
+        await AsyncStorage.setItem('cartItems', JSON.stringify(array));
+        Alert.alert('Added');
+        navigation.navigate('Home');
+      } catch (error) {
+        return error;
+      }
+    }
+  };
 
   const calculateDiscount =
     (product.productPrice * product.offPercentage) / 100;
@@ -53,12 +92,7 @@ const ProductDetailScreen = () => {
         <View style={{backgroundColor: Colors.backgroundLight}}>
           <View style={styles.iconContainer}>
             <TouchableOpacity onPress={() => navigation.goBack('Home')}>
-              <Feather
-                name="chevron-left"
-                size={28}
-                color={Colors.black}
-                style={{padding: 12}}
-              />
+              <Feather name="chevron-left" size={28} color={Colors.black} />
             </TouchableOpacity>
           </View>
           <FlatList
@@ -173,15 +207,20 @@ const ProductDetailScreen = () => {
                 <Ionicons name="location-sharp" size={16} color={Colors.blue} />
               </View>
               <View>
-                <Text>Rustaveli Ave 57,</Text>
-                <Text>17-001, Batume</Text>
+                <Text>Sweden</Text>
+                <Text>17-001, Stockholm</Text>
               </View>
             </View>
             <View>
               <Feather name="chevron-right" size={26} />
             </View>
           </TouchableOpacity>
-          <View style={{width: '90%', marginHorizontal: 'auto', gap: 4}}>
+          <View
+            style={{
+              width: '90%',
+              marginHorizontal: 'auto',
+              gap: 4,
+            }}>
             <Text style={{fontSize: 20, fontWeight: '600'}}>
               {product.productPrice} $
             </Text>
@@ -191,23 +230,46 @@ const ProductDetailScreen = () => {
                 {product.productPrice + calculateDiscount}$)
               </Text>
             )}
-            <TouchableOpacity
-              style={{
-                backgroundColor: Colors.blue,
-                paddingVertical: 16,
-                borderRadius: 16,
-                marginTop: 16,
-              }}>
-              <Text
+            {product.isAvailable ? (
+              <TouchableOpacity
+                onPress={() => addToCart(product.id)}
                 style={{
-                  color: Colors.white,
-                  fontWeight: '600',
-                  letterSpacing: 1,
-                  textAlign: 'center',
+                  backgroundColor: Colors.blue,
+                  paddingVertical: 16,
+                  borderRadius: 16,
+                  marginTop: 16,
                 }}>
-                {product.isAvailable ? 'ADD TO CART' : 'NOT AVAILABLE'}
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    color: Colors.white,
+                    fontWeight: '600',
+                    letterSpacing: 1,
+                    textAlign: 'center',
+                  }}>
+                  ADD TO CART
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={{
+                  backgroundColor: Colors.blue,
+                  paddingVertical: 16,
+                  borderRadius: 16,
+                  marginTop: 16,
+                  opacity: 0.6,
+                }}
+                disabled={true}>
+                <Text
+                  style={{
+                    color: Colors.white,
+                    fontWeight: '600',
+                    letterSpacing: 1,
+                    textAlign: 'center',
+                  }}>
+                  NOT AVAILABLE
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </Container>
       </ScrollView>

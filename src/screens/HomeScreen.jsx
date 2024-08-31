@@ -2,7 +2,7 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Header from '../components/Header';
 import SubHeader from '../components/SubHeader';
-import PageContainer from '../container/Container';
+import Container from '../container/Container';
 import SectionHeader from '../components/SectionHeader';
 import ProductCard from '../components/ProductCard';
 import {Items} from '../database/Database';
@@ -31,7 +31,7 @@ const HomeScreen = () => {
   }, []);
 
   return (
-    <PageContainer>
+    <Container>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Header />
         <SubHeader />
@@ -48,7 +48,7 @@ const HomeScreen = () => {
           ))}
         </View>
       </ScrollView>
-    </PageContainer>
+    </Container>
   );
 };
 
