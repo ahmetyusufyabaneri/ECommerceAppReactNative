@@ -4,12 +4,12 @@ import Feather from 'react-native-vector-icons/Feather';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Cart = ({data, product, setProduct, getDataFromDataBase}) => {
+const Cart = ({data, product, setProduct, getDataFromDataBase, getTotal}) => {
   const navigation = useNavigation();
 
   const updateQuantity = (id, type) => {
     const updateProduct = product.map(item => {
-      if (item.id == id) {
+      if (item.id === id) {
         let newQuantity =
           type === 'dec' ? item.quantity - 1 : item.quantity + 1;
 
@@ -18,6 +18,7 @@ const Cart = ({data, product, setProduct, getDataFromDataBase}) => {
       return item;
     });
     setProduct(updateProduct);
+    getTotal(updateProduct);
   };
 
   const deleteProduct = async id => {

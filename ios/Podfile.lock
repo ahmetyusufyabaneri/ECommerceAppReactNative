@@ -1211,7 +1211,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNVectorIcons (10.1.0):
+  - RNVectorIcons (10.2.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1481,10 +1481,10 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: ec53e44dc3e75b44aa2a9f37618a49c3bc080a7a
   RNGestureHandler: efed690b8493a00b99654043daeb1335276ac4a2
   RNScreens: aa943ad421c3ced3ef5a47ede02b0cbfc43a012e
-  RNVectorIcons: 2a2f79274248390b80684ea3c4400bd374a15c90
+  RNVectorIcons: 845eda5c7819bd29699cafd0fc98c9d4afe28c96
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: 950bbfd7e6f04790fdb51149ed51df41f329fcc8
 
 PODFILE CHECKSUM: 7d985c3ad3956a063aa14dfb411306c5baae9006
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

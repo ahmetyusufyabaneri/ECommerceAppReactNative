@@ -1,5 +1,4 @@
 import {
-  Alert,
   Animated,
   Dimensions,
   FlatList,
@@ -14,6 +13,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {Items} from '../database/Database';
 import {Colors} from '../themes/Colors';
+import {Toast} from 'toastify-react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Container from '../container/Container';
@@ -43,13 +43,13 @@ const ProductDetailScreen = () => {
     }
   };
 
-  const clearAsyncStorage = async () => {
-    try {
-      await AsyncStorage.clear();
-    } catch (error) {
-      return error;
-    }
-  };
+  // const clearAsyncStorage = async () => {
+  //   try {
+  //     await AsyncStorage.clear();
+  //   } catch (error) {
+  //     return error;
+  //   }
+  // };
 
   useEffect(() => {
     getData();
@@ -75,7 +75,6 @@ const ProductDetailScreen = () => {
       array.push(id);
       try {
         await AsyncStorage.setItem('cartItems', JSON.stringify(array));
-        Alert.alert('Added');
         navigation.navigate('Home');
       } catch (error) {
         return error;
@@ -230,49 +229,60 @@ const ProductDetailScreen = () => {
                 {product.productPrice + calculateDiscount}$)
               </Text>
             )}
-            {product.isAvailable ? (
-              <TouchableOpacity
-                onPress={() => addToCart(product.id)}
-                style={{
-                  backgroundColor: Colors.blue,
-                  paddingVertical: 16,
-                  borderRadius: 16,
-                  marginTop: 16,
-                }}>
-                <Text
-                  style={{
-                    color: Colors.white,
-                    fontWeight: '600',
-                    letterSpacing: 1,
-                    textAlign: 'center',
-                  }}>
-                  ADD TO CART
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={{
-                  backgroundColor: Colors.blue,
-                  paddingVertical: 16,
-                  borderRadius: 16,
-                  marginTop: 16,
-                  opacity: 0.6,
-                }}
-                disabled={true}>
-                <Text
-                  style={{
-                    color: Colors.white,
-                    fontWeight: '600',
-                    letterSpacing: 1,
-                    textAlign: 'center',
-                  }}>
-                  NOT AVAILABLE
-                </Text>
-              </TouchableOpacity>
-            )}
           </View>
         </Container>
       </ScrollView>
+      {product.isAvailable ? (
+        <TouchableOpacity
+          onPress={() => {
+            addToCart(product.id);
+            Toast.success('Product added to cart', 'top');
+          }}
+          style={{
+            width: '90%',
+            marginHorizontal: 'auto',
+            marginBottom: 8,
+            backgroundColor: Colors.blue,
+            paddingVertical: 16,
+            borderRadius: 16,
+            marginTop: 16,
+          }}>
+          <Text
+            style={{
+              color: Colors.white,
+              fontWeight: '600',
+              letterSpacing: 1,
+              textAlign: 'center',
+              textTransform: 'uppercase',
+            }}>
+            Add to Cart
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          style={{
+            width: '90%',
+            marginHorizontal: 'auto',
+            marginBottom: 8,
+            backgroundColor: Colors.blue,
+            paddingVertical: 16,
+            borderRadius: 16,
+            marginTop: 16,
+            opacity: 0.6,
+          }}
+          disabled={true}>
+          <Text
+            style={{
+              color: Colors.white,
+              fontWeight: '600',
+              letterSpacing: 1,
+              textAlign: 'center',
+              textTransform: 'uppercase',
+            }}>
+            Not Available
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
